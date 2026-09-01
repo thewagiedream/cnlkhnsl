@@ -1,0 +1,30 @@
+[project]
+name = "comfyui_flet_app"
+version = "1.0.0"
+description = "ComfyUI Flet App"
+requires-python = ">=3.9"
+dependencies = [
+    "flet",
+    "aiohttp",
+    "Pillow"
+]
+
+[tool.flet]
+org = "com.flet"
+product = "ComfyUI"
+exclude = ["custom-template"]
+
+[tool.flet.app]
+path = "src"
+module = "main"
+
+[tool.flet.template]
+url = "./custom-template"
+
+[tool.flet.android.permission]
+"android.permission.MANAGE_EXTERNAL_STORAGE" = true
+"android.permission.POST_NOTIFICATIONS" = true
+"android.permission.INTERNET" = true
+"android.permission.FOREGROUND_SERVICE" = true
+"android.permission.FOREGROUND_SERVICE_DATA_SYNC" = true
+"android.permission.WAKE_LOCK" = true
