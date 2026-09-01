@@ -1,0 +1,56 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main       # or master
+  workflow_dispatch: # Allows you to run this workflow manually from GitHub Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repository (includes pyproject.toml, src, and custom-template)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Java JDK 17 (Required by Android Gradle)
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # 3. Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # 4. Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 5. Install Flet CLI
+      - name: Install Flet
+        run: |
+          python -m pip install --upgrade pip
+          pip install flet
+
+      # 6. Build the APK using your pyproject.toml configuration
+      - name: Build APK
+        run: |
+          flet build apk --verbose
+
+      # 7. Upload the generated APK as a downloadable artifact
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: comfyui-apk
+          path: build/apk/*.apk
+          if-no-files-found: error
